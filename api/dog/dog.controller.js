@@ -32,10 +32,9 @@ export async function getDogById(req, res) {
 }
 
 export async function addDog(req, res) {
-	const { loggedinUser, body: dog } = req
+	const { body: dog } = req
 
 	try {
-		dog.owner = loggedinUser
 		const addedDog = await dogService.add(dog)
 		res.json(addedDog)
 	} catch (err) {

@@ -12,9 +12,9 @@ const router = express.Router()
 
 router.get('/', log, getDogs)
 router.get('/:id', log, getDogById)
-router.post('/', log, requireAuth, addDog)
-router.put('/:id', requireAuth, updateDog)
-router.delete('/:id', requireAuth, removeDog)
+router.post('/', log, addDog)
+router.put('/:id', updateDog)
+router.delete('/:id', removeDog)
 // router.delete('/:id', requireAuth, requireAdmin, removeDog)
 
 router.post('/:id/msg', requireAuth, addDogMsg)
