@@ -52,25 +52,38 @@ async function getById(dogId) {
 	}
 }
 
-async function remove(dogId) {
-    const { loggedinUser } = asyncLocalStorage.getStore()
-    const { _id: ownerId, isAdmin } = loggedinUser
+// async function remove(dogId) {
+//     const { loggedinUser } = asyncLocalStorage.getStore()
+//     const { _id: ownerId, isAdmin } = loggedinUser
 
-	try {
-        const criteria = { 
-            _id: ObjectId.createFromHexString(dogId), 
-        }
-        if(!isAdmin) criteria['owner._id'] = ownerId
+// 	try {
+//         const criteria = { 
+//             _id: ObjectId.createFromHexString(dogId), 
+//         }
+//         if(!isAdmin) criteria['owner._id'] = ownerId
         
-		const collection = await dbService.getCollection('dog')
-		const res = await collection.deleteOne(criteria)
+// 		const collection = await dbService.getCollection('dog')
+// 		const res = await collection.deleteOne(criteria)
 
-        if(res.deletedCount === 0) throw('Not your dog')
-		return dogId
-	} catch (err) {
-		logger.error(`cannot remove dog ${dogId}`, err)
-		throw err
-	}
+//         if(res.deletedCount === 0) throw('Not your dog')
+// 		return dogId
+// 	} catch (err) {
+// 		logger.error(`cannot remove dog ${dogId}`, err)
+// 		throw err
+// 	}
+// }
+
+async function remove(dogId) {
+    try {
+        const criteria = { _id: ObjectId.createFromHexString(dogId) }
+        const collection = await dbService.getCollection('dog')
+        const res = await collection.deleteOne(criteria)
+        if (res.deletedCount === 0) throw('Not found')
+        return dogId
+    } catch (err) {
+        logger.error(`cannot remove dog ${dogId}`, err)
+        throw err
+    }
 }
 
 async function add(dog) {
