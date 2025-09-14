@@ -98,21 +98,46 @@ async function add(dog) {
 	}
 }
 
+// async function update(dog) {
+//     const dogToSave = { vendor: dog.vendor, speed: dog.speed }
+
+//     try {
+//         const criteria = { _id: ObjectId.createFromHexString(dog._id) }
+
+// 		const collection = await dbService.getCollection('dog')
+// 		await collection.updateOne(criteria, { $set: dogToSave })
+
+// 		return dog
+// 	} catch (err) {
+// 		logger.error(`cannot update dog ${dog._id}`, err)
+// 		throw err
+// 	}
+// }
+
 async function update(dog) {
-    const dogToSave = { vendor: dog.vendor, speed: dog.speed }
-
     try {
-        const criteria = { _id: ObjectId.createFromHexString(dog._id) }
+        const dogToSave = {
+            name: dog.name,
+            gender: dog.gender,
+            breed: dog.breed,
+            age: +dog.age, // ensure number
+            castrated: dog.castrated,
+            ownerName: dog.ownerName,
+            ownerPhone: dog.ownerPhone,
+        }
 
-		const collection = await dbService.getCollection('dog')
-		await collection.updateOne(criteria, { $set: dogToSave })
+        const criteria = { _id: new ObjectId(dog._id) }
 
-		return dog
-	} catch (err) {
-		logger.error(`cannot update dog ${dog._id}`, err)
-		throw err
-	}
+        const collection = await dbService.getCollection('dog')
+        await collection.updateOne(criteria, { $set: dogToSave })
+
+        return { ...dog, ...dogToSave } // return updated object
+    } catch (err) {
+        logger.error(`cannot update dog ${dog._id}`, err)
+        throw err
+    }
 }
+
 
 async function addDogMsg(dogId, msg) {
 	try {

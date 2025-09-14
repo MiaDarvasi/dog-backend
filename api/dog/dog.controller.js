@@ -43,23 +43,29 @@ export async function addDog(req, res) {
 	}
 }
 
+// export async function updateDog(req, res) {
+
+// 	try {
+// 		const updatedDog = await dogService.update(dog)
+// 		res.json(updatedDog)
+// 	} catch (err) {
+// 		logger.error('Failed to update dog', err)
+// 		res.status(400).send({ err: 'Failed to update dog' })
+// 	}
+// }
+
+
 export async function updateDog(req, res) {
-	const { loggedinUser, body: dog } = req
-    const { _id: userId, isAdmin } = loggedinUser
-
-    if(!isAdmin && dog.owner._id !== userId) {
-        res.status(403).send('Not your dog...')
-        return
+    try {
+        const dog = req.body
+        const updatedDog = await dogService.update(dog)
+        res.json(updatedDog)
+    } catch (err) {
+        logger.error('Failed to update dog', err)
+        res.status(400).send({ err: 'Failed to update dog' })
     }
-
-	try {
-		const updatedDog = await dogService.update(dog)
-		res.json(updatedDog)
-	} catch (err) {
-		logger.error('Failed to update dog', err)
-		res.status(400).send({ err: 'Failed to update dog' })
-	}
 }
+
 
 export async function removeDog(req, res) {
 	try {
