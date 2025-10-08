@@ -5,11 +5,7 @@ export async function getDogs(req, res) {
 	try {
 		const filterBy = {
 			name: req.query.name || '',
-			// age: req.query.age ? +req.query.age : null
-			// minSpeed: +req.query.minSpeed || 0,
-            // sortField: req.query.sortField || '',
-            // sortDir: req.query.sortDir || 1,
-			// pageIdx: req.query.pageIdx,
+			breed: req.query.breed || '',
 		}
 		const dogs = await dogService.query(filterBy)
 		res.json(dogs)

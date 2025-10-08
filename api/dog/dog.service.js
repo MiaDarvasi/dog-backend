@@ -52,27 +52,6 @@ async function getById(dogId) {
 	}
 }
 
-// async function remove(dogId) {
-//     const { loggedinUser } = asyncLocalStorage.getStore()
-//     const { _id: ownerId, isAdmin } = loggedinUser
-
-// 	try {
-//         const criteria = { 
-//             _id: ObjectId.createFromHexString(dogId), 
-//         }
-//         if(!isAdmin) criteria['owner._id'] = ownerId
-        
-// 		const collection = await dbService.getCollection('dog')
-// 		const res = await collection.deleteOne(criteria)
-
-//         if(res.deletedCount === 0) throw('Not your dog')
-// 		return dogId
-// 	} catch (err) {
-// 		logger.error(`cannot remove dog ${dogId}`, err)
-// 		throw err
-// 	}
-// }
-
 async function remove(dogId) {
     try {
         const criteria = { _id: ObjectId.createFromHexString(dogId) }
@@ -120,7 +99,7 @@ async function update(dog) {
             name: dog.name,
             gender: dog.gender,
             breed: dog.breed,
-            age: +dog.age, // ensure number
+            age: +dog.age, 
             castrated: dog.castrated,
             ownerName: dog.ownerName,
             ownerPhone: dog.ownerPhone,
@@ -131,7 +110,7 @@ async function update(dog) {
         const collection = await dbService.getCollection('dog')
         await collection.updateOne(criteria, { $set: dogToSave })
 
-        return { ...dog, ...dogToSave } // return updated object
+        return { ...dog, ...dogToSave }
     } catch (err) {
         logger.error(`cannot update dog ${dog._id}`, err)
         throw err
@@ -188,6 +167,17 @@ async function removeDogMsg(dogId, msgId) {
 //     return criteria
 // }
 
+// function _buildCriteria(filterBy = {}) {
+//     const criteria = {}
+
+//     if (filterBy.name) {
+//         criteria.name = { $regex: filterBy.name, $options: 'i' }
+//     }
+
+//     return criteria
+// }
+
+
 function _buildCriteria(filterBy = {}) {
     const criteria = {}
 
@@ -195,8 +185,13 @@ function _buildCriteria(filterBy = {}) {
         criteria.name = { $regex: filterBy.name, $options: 'i' }
     }
 
+    if (filterBy.breed) {
+        criteria.breed = { $regex: filterBy.breed, $options: 'i' }
+    }
+
     return criteria
 }
+
 
 
 
