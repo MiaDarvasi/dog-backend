@@ -103,6 +103,7 @@ async function update(dog) {
             castrated: dog.castrated,
             ownerName: dog.ownerName,
             ownerPhone: dog.ownerPhone,
+			chip: dog.chip,
         }
 
         const criteria = { _id: new ObjectId(dog._id) }
@@ -147,25 +148,6 @@ async function removeDogMsg(dogId, msgId) {
 	}
 }
 
-// function _buildCriteria(filterBy) {
-//     const criteria = {
-//         vendor: { $regex: filterBy.txt, $options: 'i' },
-//         speed: { $gte: filterBy.minSpeed },
-//     }
-
-//     return criteria
-// }
-
-// function _buildCriteria(filterBy = {}) {
-//     const criteria = {}
-//     if (filterBy.name) {
-//         criteria.name = { $regex: filterBy.name, $options: 'i' }
-//     }
-//     if (filterBy.age) {
-//         criteria.age = +filterBy.age
-//     }
-//     return criteria
-// }
 
 // function _buildCriteria(filterBy = {}) {
 //     const criteria = {}
@@ -174,24 +156,31 @@ async function removeDogMsg(dogId, msgId) {
 //         criteria.name = { $regex: filterBy.name, $options: 'i' }
 //     }
 
+//     if (filterBy.breed) {
+//         criteria.breed = { $regex: filterBy.breed, $options: 'i' }
+//     }
+
+// 	if (filterBy.chip) {
+//         criteria.chip = { $regex: filterBy.chip, $options: 'i' }
+//     }
+
 //     return criteria
 // }
-
 
 function _buildCriteria(filterBy = {}) {
     const criteria = {}
 
-    if (filterBy.name) {
-        criteria.name = { $regex: filterBy.name, $options: 'i' }
-    }
-
-    if (filterBy.breed) {
-        criteria.breed = { $regex: filterBy.breed, $options: 'i' }
+    if (filterBy.txt) {
+        const regex = { $regex: filterBy.txt, $options: 'i' }
+        criteria.$or = [
+            { name: regex },
+            { breed: regex },
+            { chip: regex },
+        ]
     }
 
     return criteria
 }
-
 
 
 

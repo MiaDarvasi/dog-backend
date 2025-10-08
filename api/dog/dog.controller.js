@@ -1,18 +1,18 @@
 import { logger } from '../../services/logger.service.js'
 import { dogService } from './dog.service.js'
 
+
 export async function getDogs(req, res) {
-	try {
-		const filterBy = {
-			name: req.query.name || '',
-			breed: req.query.breed || '',
-		}
-		const dogs = await dogService.query(filterBy)
-		res.json(dogs)
-	} catch (err) {
-		logger.error('Failed to get dogs', err)
-		res.status(400).send({ err: 'Failed to get dogs' })
-	}
+    try {
+        const filterBy = {
+            txt: req.query.txt || '',
+        }
+        const dogs = await dogService.query(filterBy)
+        res.json(dogs)
+    } catch (err) {
+        logger.error('Failed to get dogs', err)
+        res.status(400).send({ err: 'Failed to get dogs' })
+    }
 }
 
 
