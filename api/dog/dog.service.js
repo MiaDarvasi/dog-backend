@@ -104,6 +104,7 @@ async function update(dog) {
             ownerName: dog.ownerName,
             ownerPhone: dog.ownerPhone,
 			chip: dog.chip,
+			pricePerDay: dog.pricePerDay,
         }
 
         const criteria = { _id: new ObjectId(dog._id) }
