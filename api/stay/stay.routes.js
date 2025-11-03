@@ -1,6 +1,6 @@
 import express from 'express'
 import { log } from '../../middlewares/logger.middleware.js'
-import { addStay, getStays, getStayById } from './stay.controller.js'
+import { addStay, getStays, getStayById, removeStay } from './stay.controller.js'
 
 
 const router = express.Router()
@@ -9,6 +9,7 @@ const router = express.Router()
 router.get('/', log, getStays) // optional query ?dogId=
 router.get('/:id', log, getStayById)
 router.post('/', log, addStay)
+router.delete('/:id', log, removeStay)
 
 
 export const stayRoutes = router

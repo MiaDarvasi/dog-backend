@@ -19,8 +19,8 @@ export const dogService = {
 
 async function query(filterBy = { name: '' }) {
 	try {
-        const criteria = _buildCriteria(filterBy)
-        const sort = _buildSort(filterBy)
+		const criteria = _buildCriteria(filterBy)
+		const sort = _buildSort(filterBy)
 
 		const collection = await dbService.getCollection('dog')
 		var dogCursor = await collection.find(criteria, { sort })
@@ -39,11 +39,11 @@ async function query(filterBy = { name: '' }) {
 
 async function getById(dogId) {
 	try {
-        const criteria = { _id: ObjectId.createFromHexString(dogId) }
+		const criteria = { _id: ObjectId.createFromHexString(dogId) }
 
 		const collection = await dbService.getCollection('dog')
 		const dog = await collection.findOne(criteria)
-        
+
 		dog.createdAt = dog._id.getTimestamp()
 		return dog
 	} catch (err) {
@@ -53,16 +53,16 @@ async function getById(dogId) {
 }
 
 async function remove(dogId) {
-    try {
-        const criteria = { _id: ObjectId.createFromHexString(dogId) }
-        const collection = await dbService.getCollection('dog')
-        const res = await collection.deleteOne(criteria)
-        if (res.deletedCount === 0) throw('Not found')
-        return dogId
-    } catch (err) {
-        logger.error(`cannot remove dog ${dogId}`, err)
-        throw err
-    }
+	try {
+		const criteria = { _id: ObjectId.createFromHexString(dogId) }
+		const collection = await dbService.getCollection('dog')
+		const res = await collection.deleteOne(criteria)
+		if (res.deletedCount === 0) throw ('Not found')
+		return dogId
+	} catch (err) {
+		logger.error(`cannot remove dog ${dogId}`, err)
+		throw err
+	}
 }
 
 async function add(dog) {
@@ -94,37 +94,45 @@ async function add(dog) {
 // }
 
 async function update(dog) {
-    try {
-        const dogToSave = {
-            name: dog.name,
-            gender: dog.gender,
-            breed: dog.breed,
-            age: +dog.age, 
-            castrated: dog.castrated,
-            ownerName: dog.ownerName,
-            ownerPhone: dog.ownerPhone,
+	try {
+		const dogToSave = {
+			name: dog.name,
+			gender: dog.gender,
+			breed: dog.breed,
+			age: +dog.age,
+			castrated: dog.castrated,
+			ownerName: dog.ownerName,
+			ownerPhone: dog.ownerPhone,
 			chip: dog.chip,
-			pricePerDay: dog.pricePerDay,
+			pricePerDay: +dog.pricePerDay,
+			haircutPrice: dog.haircutPrice,
+			equipmentLoc: dog.equipmentLoc,
+			equipment: dog.equipment,
+			med: dog.med,
+			specialFood: dog.specialFood,
+			collarColor: dog.collarColor,
+			ourNum: dog.ourNum,
+			notes: dog.notes,
         }
 
-        const criteria = { _id: new ObjectId(dog._id) }
+		const criteria = { _id: new ObjectId(dog._id) }
 
-        const collection = await dbService.getCollection('dog')
-        await collection.updateOne(criteria, { $set: dogToSave })
+		const collection = await dbService.getCollection('dog')
+		await collection.updateOne(criteria, { $set: dogToSave })
 
-        return { ...dog, ...dogToSave }
-    } catch (err) {
-        logger.error(`cannot update dog ${dog._id}`, err)
-        throw err
-    }
+		return { ...dog, ...dogToSave }
+	} catch (err) {
+		logger.error(`cannot update dog ${dog._id}`, err)
+		throw err
+	}
 }
 
 
 async function addDogMsg(dogId, msg) {
 	try {
-        const criteria = { _id: ObjectId.createFromHexString(dogId) }
-        msg.id = makeId()
-        
+		const criteria = { _id: ObjectId.createFromHexString(dogId) }
+		msg.id = makeId()
+
 		const collection = await dbService.getCollection('dog')
 		await collection.updateOne(criteria, { $push: { msgs: msg } })
 
@@ -137,11 +145,11 @@ async function addDogMsg(dogId, msg) {
 
 async function removeDogMsg(dogId, msgId) {
 	try {
-        const criteria = { _id: ObjectId.createFromHexString(dogId) }
+		const criteria = { _id: ObjectId.createFromHexString(dogId) }
 
 		const collection = await dbService.getCollection('dog')
-		await collection.updateOne(criteria, { $pull: { msgs: { id: msgId }}})
-        
+		await collection.updateOne(criteria, { $pull: { msgs: { id: msgId } } })
+
 		return msgId
 	} catch (err) {
 		logger.error(`cannot add dog msg ${dogId}`, err)
@@ -169,23 +177,23 @@ async function removeDogMsg(dogId, msgId) {
 // }
 
 function _buildCriteria(filterBy = {}) {
-    const criteria = {}
+	const criteria = {}
 
-    if (filterBy.txt) {
-        const regex = { $regex: filterBy.txt, $options: 'i' }
-        criteria.$or = [
-            { name: regex },
-            { breed: regex },
-            { chip: regex },
-        ]
-    }
+	if (filterBy.txt) {
+		const regex = { $regex: filterBy.txt, $options: 'i' }
+		criteria.$or = [
+			{ name: regex },
+			{ breed: regex },
+			{ chip: regex },
+		]
+	}
 
-    return criteria
+	return criteria
 }
 
 
 
 function _buildSort(filterBy) {
-    if(!filterBy.sortField) return {}
-    return { [filterBy.sortField]: filterBy.sortDir }
+	if (!filterBy.sortField) return {}
+	return { [filterBy.sortField]: filterBy.sortDir }
 }

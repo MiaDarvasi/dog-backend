@@ -28,17 +28,6 @@ export async function getStayById(req, res) {
 }
 
 
-// export async function addStay(req, res) {
-// try {
-// const stayData = req.body
-// const added = await stayService.add(stayData)
-// res.json(added)
-// } catch (err) {
-// logger.error('Failed to add stay', err)
-// res.status(400).send({ err: 'Failed to add stay' })
-// }
-// }
-
 
 export async function addStay(req, res) {
     try {
@@ -50,5 +39,16 @@ export async function addStay(req, res) {
     } catch (err) {
         console.error('❌ Failed to add stay:', err)
         res.status(500).send({ err: 'Failed to add stay', details: err.message })
+    }
+}
+
+export async function removeStay(req, res) {
+    try {
+        const stayId = req.params.id
+        await stayService.remove(stayId)
+        res.json({ msg: 'Stay removed', stayId })
+    } catch (err) {
+        logger.error('Failed to remove stay', err)
+        res.status(400).send({ err: 'Failed to remove stay' })
     }
 }
