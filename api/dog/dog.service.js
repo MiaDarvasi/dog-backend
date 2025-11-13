@@ -113,8 +113,9 @@ async function update(dog) {
 			collarColor: dog.collarColor,
 			ourNum: dog.ourNum,
 			notes: dog.notes,
-			size: body.size,
-			city: body.city,
+			size: dog.size,
+			city: dog.city,
+			imgUrl: dog.imgUrl,
 		}
 
 		const criteria = { _id: new ObjectId(dog._id) }
