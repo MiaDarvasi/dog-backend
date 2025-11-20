@@ -1,4 +1,5 @@
 import { logger } from '../../services/logger.service.js'
+import { stayService } from '../stay/stay.service.js'
 import { dogService } from './dog.service.js'
 
 
@@ -39,17 +40,6 @@ export async function addDog(req, res) {
 	}
 }
 
-// export async function updateDog(req, res) {
-
-// 	try {
-// 		const updatedDog = await dogService.update(dog)
-// 		res.json(updatedDog)
-// 	} catch (err) {
-// 		logger.error('Failed to update dog', err)
-// 		res.status(400).send({ err: 'Failed to update dog' })
-// 	}
-// }
-
 
 export async function updateDog(req, res) {
     try {
@@ -66,6 +56,8 @@ export async function updateDog(req, res) {
 export async function removeDog(req, res) {
 	try {
 		const dogId = req.params.id
+
+		await stayService.removeByDogId(dogId)
 		const removedId = await dogService.remove(dogId)
 
 		res.send(removedId)

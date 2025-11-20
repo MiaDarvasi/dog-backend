@@ -15,6 +15,7 @@ export const dogService = {
 	update,
 	addDogMsg,
 	removeDogMsg,
+	removeByDogId,
 }
 
 async function query(filterBy = { name: '' }) {
@@ -161,23 +162,15 @@ async function removeDogMsg(dogId, msgId) {
 }
 
 
-// function _buildCriteria(filterBy = {}) {
-//     const criteria = {}
-
-//     if (filterBy.name) {
-//         criteria.name = { $regex: filterBy.name, $options: 'i' }
-//     }
-
-//     if (filterBy.breed) {
-//         criteria.breed = { $regex: filterBy.breed, $options: 'i' }
-//     }
-
-// 	if (filterBy.chip) {
-//         criteria.chip = { $regex: filterBy.chip, $options: 'i' }
-//     }
-
-//     return criteria
-// }
+async function removeByDogId(dogId) {
+    try {
+        const collection = await dbService.getCollection('stay')
+        await collection.deleteMany({ dogId })
+    } catch (err) {
+        logger.error('Cannot remove stays by dogId', err)
+        throw err
+    }
+}
 
 function _buildCriteria(filterBy = {}) {
 	const criteria = {}
