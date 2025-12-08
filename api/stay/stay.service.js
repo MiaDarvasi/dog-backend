@@ -6,7 +6,8 @@ export const stayService = {
     add,
     query,
     getById,
-    remove
+    remove,
+    removeByDogId,
 }
 
 
@@ -55,4 +56,16 @@ async function getById(stayId) {
 async function remove(stayId) {
     const collection = await dbService.getCollection('stay')
     await collection.deleteOne({ _id: new ObjectId(stayId) })
+}
+
+
+async function removeByDogId(dogId) {
+    const collection = await dbService.getCollection('stay')
+
+    // dogId in stays is stored as ObjectId, so convert:
+    const criteria = { dogId: new ObjectId(dogId) }
+    const res = await collection.deleteMany(criteria)
+
+    console.log(`Removed ${res.deletedCount} stays for dog ${dogId}`)
+    return res.deletedCount
 }
