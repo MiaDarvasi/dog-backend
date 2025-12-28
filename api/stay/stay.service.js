@@ -8,6 +8,7 @@ export const stayService = {
     getById,
     remove,
     removeByDogId,
+    queryForExport,
 }
 
 
@@ -69,3 +70,24 @@ async function removeByDogId(dogId) {
     console.log(`Removed ${res.deletedCount} stays for dog ${dogId}`)
     return res.deletedCount
 }
+
+
+async function queryForExport({ from, to } = {}) {
+    const collection = await dbService.getCollection('stay') // adjust collection name if different
+  
+    const criteria = {}
+    // Simple overlap logic: stays that intersect the window
+    // If you only want stays starting in range, simplify criteria accordingly.
+    if (from || to) {
+      criteria.$and = []
+      if (to) criteria.$and.push({ startDate: { $lte: to } })
+      if (from) criteria.$and.push({ endDate: { $gte: from } })
+      if (!criteria.$and.length) delete criteria.$and
+    }
+  
+    return collection
+      .find(criteria)
+      .project({ dogId: 1, startDate: 1, endDate: 1, price: 1 }) // keep it lean
+      .sort({ startDate: 1 })
+      .toArray()
+  }

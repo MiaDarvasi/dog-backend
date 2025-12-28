@@ -11,6 +11,8 @@ import { dogRoutes } from './api/dog/dog.routes.js'
 import { stayRoutes } from './api/stay/stay.routes.js'
 import { setupSocketAPI } from './services/socket.service.js'
 
+import { exportStays } from './api/stay/stay.controller.js'
+
 import { setupAsyncLocalStorage } from './middlewares/setupAls.middleware.js'
 
 const app = express()
@@ -40,6 +42,8 @@ app.use('/api/user', userRoutes)
 app.use('/api/review', reviewRoutes)
 app.use('/api/dog', dogRoutes)
 app.use('/api/stay', stayRoutes)
+
+// stayRoutes.get('/export', exportStays)
 
 setupSocketAPI(server)
 
